@@ -1,19 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/big_window_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
     android:padding="40dp"
-    android:orientation="vertical"
     android:descendantFocusability="blocksDescendants">
 
+
+    <LinearLayout
+        android:id="@+id/app_panel"
+        android:layout_width="match_parent"
+        android:layout_height="80dip"
+        android:gravity="center_horizontal|center_vertical"
+        android:background="#00ffff"
+        android:orientation="horizontal">
+
+        <include android:id="@+id/app_0"
+        layout="@layout/app_item" />
+
+        <include android:id="@+id/app_1"
+            layout="@layout/app_item" />
+
+        <include android:id="@+id/app_2"
+            layout="@layout/app_item" />
+
+        <include android:id="@+id/app_3"
+            layout="@layout/app_item" />
+    </LinearLayout>
 
     <android.gesture.GestureOverlayView
         android:id="@+id/gesture_panel"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff">
-    </android.gesture.GestureOverlayView>
+        android:background="#ffffff"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
-</LinearLayout>
+    </android.gesture.GestureOverlayView>
+</RelativeLayout>

@@ -11,10 +11,7 @@ import android.view.View;
 /**
  * 示例
  * 
- * @ClassName: com.qust.demo.MainActivity
- * @Description:
- * @author zhaokaiqiang
- * @date 2014-10-23 下午11:30:13
+ * @author chengyao
  * 
  */
 public class MainActivity extends Activity {

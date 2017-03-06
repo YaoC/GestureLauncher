@@ -1,17 +1,30 @@
 package cn.edu.pku.chengyao.gesturelauncher;
 
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.gesture.Gesture;
+import android.gesture.GestureOverlayView;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.util.List;
 
-public class FloatWindowBigView extends LinearLayout {
+
+public class FloatWindowBigView extends RelativeLayout implements
+		GestureOverlayView.OnGesturePerformedListener,
+		GestureOverlayView.OnGesturingListener {
 
 	private static final String TAG = "GestureLauncher";
 
@@ -24,6 +37,19 @@ public class FloatWindowBigView extends LinearLayout {
 
 	private Context context;
 
+	//	手势面板
+	private GestureOverlayView gesturePanel;
+
+	//	APP面板
+	private LinearLayout appPanel;
+
+	private int[] ids = {
+			R.id.app_0,
+			R.id.app_1,
+			R.id.app_2,
+			R.id.app_3
+	};
+
 	public FloatWindowBigView(Context context) {
 		super(context);
 		this.context = context;
@@ -33,6 +59,11 @@ public class FloatWindowBigView extends LinearLayout {
 		View view = findViewById(R.id.big_window_layout);
 		viewWidth = view.getLayoutParams().width;
 		viewHeight = view.getLayoutParams().height;
+
+
+		//	隐藏 app_panel
+		appPanel = (LinearLayout) findViewById(R.id.app_panel);
+		appPanel.setVisibility(INVISIBLE);
 
 		Log.d(TAG, "FloatWindowBigView: viewWidth=" + viewWidth + "  viewHeight=" + viewHeight);
 
@@ -58,14 +89,110 @@ public class FloatWindowBigView extends LinearLayout {
 	}
 
 	private void initView() {
-		LinearLayout linearLayout = (LinearLayout) findViewById(R.id.big_window_layout);
-		linearLayout.setOnClickListener(new OnClickListener() {
+		RelativeLayout relativeLayout = (RelativeLayout) findViewById(R.id.big_window_layout);
+		relativeLayout.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				FloatWindowManager.getInstance(context).removeBigWindow();
 			}
 		});
+
+		//	手势
+		gesturePanel = (GestureOverlayView) findViewById(R.id.gesture_panel);
+		//	设置手势可以多笔完成
+		gesturePanel.setGestureStrokeType(GestureOverlayView.GESTURE_STROKE_TYPE_MULTIPLE);
+
+		//	绑定监听器
+		gesturePanel.addOnGesturingListener(this);
+		gesturePanel.addOnGesturePerformedListener(this);
+
+
 	}
+
+	//手势响应
+	@Override
+	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+		Log.d(TAG, "onGesturePerformed: ");
+		// TODO: 2017/3/5  记录绘制完成时间,写入日志
+		// TODO: 2017/3/5 识别手势，返回APP数组
+		gesturePanel.setVisibility(INVISIBLE);
+		appPanel.setVisibility(VISIBLE);
+		List<ResolveInfo> appList = MyApplication.getLaunchables();
+		Log.d(TAG, "onGesturePerformed: "+appList);
+		PackageManager pm = MyApplication.getMyPackageManager();
+		for (int i = 0; i < 4; i++) {
+			LinearLayout app = (LinearLayout) findViewById(ids[i]);
+			ImageView appIcon = (ImageView) app.findViewById(R.id.app_icon);
+			TextView appName = (TextView) app.findViewById(R.id.app_name);
+			appIcon.setImageDrawable(appList.get(i).loadIcon(pm));
+			appName.setText(appList.get(i).loadLabel(pm));
+//			app.setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					String packageName = ((TextView) v.findViewById(R.id.app_package_name))
+//							.getText().toString();
+//					Log.d(TAG, "onClick: " + packageName);
+//					Intent i = MyApplication.startApp(packageName);
+//					if (i == null) {
+//						Log.d(TAG, "onClick: Intent is null");
+//
+//					} else {
+//						context.startActivity(i);
+//					}
+//				}
+//			});
+
+		}
+	}
+
+//	//手势响应
+//	@Override
+//	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+//		Log.d(TAG, "onGesturePerformed: ");
+//		// TODO: 2017/3/5  记录绘制完成时间,写入日志
+//		// TODO: 2017/3/5 识别手势，返回APP数组
+//		gesturePanel.setVisibility(INVISIBLE);
+//		appPanel.setVisibility(VISIBLE);
+//		List<AppInfo> appInfos = MyApplication.getAppInfos().subList(4, 8);
+//
+//		for (int i = 0; i < 4; i++) {
+//			LinearLayout app = (LinearLayout) findViewById(ids[i]);
+//			ImageView appIcon = (ImageView) app.findViewById(R.id.app_icon);
+//			TextView appName = (TextView) app.findViewById(R.id.app_name);
+//			TextView appPackageName = (TextView) app.findViewById(R.id.app_package_name);
+//			appIcon.setImageDrawable(appInfos.get(i).getIcon());
+//			appName.setText(appInfos.get(i).getAppName());
+//			appPackageName.setText(appInfos.get(i).getPackageName());
+//			app.setOnClickListener(new OnClickListener() {
+//				@Override
+//				public void onClick(View v) {
+//					String packageName = ((TextView) v.findViewById(R.id.app_package_name))
+//							.getText().toString();
+//					Log.d(TAG, "onClick: " + packageName);
+//					Intent i = MyApplication.startApp(packageName);
+//					if (i == null) {
+//						Log.d(TAG, "onClick: Intent is null");
+//
+//					} else {
+//						context.startActivity(i);
+//					}
+//				}
+//			});
+//
+//		}
+//	}
+
+	@Override
+	public void onGesturingStarted(GestureOverlayView overlay) {
+		Log.d(TAG, "onGesturingStarted: ");
+		// TODO: 2017/3/5  记录开始时间
+	}
+
+	@Override
+	public void onGesturingEnded(GestureOverlayView overlay) {
+		Log.d(TAG, "onGesturingEnded: ");
+	}
+
 
 }

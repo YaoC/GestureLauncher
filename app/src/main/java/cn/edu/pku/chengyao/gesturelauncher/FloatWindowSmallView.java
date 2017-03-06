@@ -17,7 +17,7 @@ import android.widget.TextView;
 /**
  * 小悬浮窗,用于初始显示
  * 
- * @author zhaokaiqiang
+ * @author chengyao
  * 
  */
 public class FloatWindowSmallView extends LinearLayout {
