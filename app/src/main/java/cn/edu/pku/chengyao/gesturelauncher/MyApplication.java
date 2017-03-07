@@ -1,18 +1,15 @@
 package cn.edu.pku.chengyao.gesturelauncher;
 
 import android.app.Application;
-import android.content.ComponentName;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by chengyao on 2017/3/5.
@@ -24,7 +21,6 @@ public class MyApplication extends Application{
 
     public static final String TAG = "MyApp";
 
-    private static List<AppInfo> appInfos;
     private static List<ResolveInfo> launchables;
 
     private static PackageManager pm;
@@ -40,30 +36,17 @@ public class MyApplication extends Application{
         return mApplication;
     }
 
-//    private void initAppInfos() {
-//        appInfos = new ArrayList<>();
-//        PackageManager pm = mApplication.getPackageManager();
-//        List<PackageInfo> packageInfos = pm.getInstalledPackages(PackageManager.GET_UNINSTALLED_PACKAGES);
-//        for (PackageInfo packageInfo : packageInfos) {
-//            String packageName = packageInfo.packageName;
-//            if (mApplication.getPackageManager()
-//                    .getLaunchIntentForPackage(packageName) != null) {
-//                String appName = packageInfo.applicationInfo.loadLabel(pm).toString();
-//                Drawable icon = packageInfo.applicationInfo.loadIcon(pm);
-//                AppInfo appInfo = new AppInfo(appName, packageName, icon);
-//                appInfos.add(appInfo);
-//            }
-//        }
-//    }
-
     //获取所有可以启动的activity
     private void initAppInfos2() {
         pm = mApplication.getPackageManager();
         Intent main=new Intent(Intent.ACTION_MAIN, null);
-        launchables=pm.queryIntentActivities(main, 0);
-        Collections.sort(launchables,
-                new ResolveInfo.DisplayNameComparator(pm));
-        Log.d(TAG, "initAppInfos2: "+launchables);
+        List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
+        Map<String, ResolveInfo> temp = new HashMap<>();
+        for (ResolveInfo resolveInfo : apps) {
+            Log.d(TAG, "initAppInfos2: "+resolveInfo.activityInfo.packageName);
+            temp.put(resolveInfo.activityInfo.packageName, resolveInfo);
+        }
+        launchables = new ArrayList<>(temp.values());
 
     }
 
@@ -71,15 +54,6 @@ public class MyApplication extends Application{
         return launchables.subList(0, 4);
     }
 
-//    public static List<AppInfo> getAppInfos(){
-//        return appInfos;
-//    }
-
-//    public static Intent startApp(String packagename) {
-//        Intent i = mApplication.getPackageManager()
-//                .getLaunchIntentForPackage(packagename);
-//        return i;
-//    }
 
     public static PackageManager getMyPackageManager() {
         return pm;

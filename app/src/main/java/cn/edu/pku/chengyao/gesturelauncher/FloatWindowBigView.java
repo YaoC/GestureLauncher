@@ -1,14 +1,13 @@
 package cn.edu.pku.chengyao.gesturelauncher;
 
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.gesture.Gesture;
 import android.gesture.GestureOverlayView;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -125,63 +124,32 @@ public class FloatWindowBigView extends RelativeLayout implements
 			LinearLayout app = (LinearLayout) findViewById(ids[i]);
 			ImageView appIcon = (ImageView) app.findViewById(R.id.app_icon);
 			TextView appName = (TextView) app.findViewById(R.id.app_name);
+			TextView packageName = (TextView) app.findViewById(R.id.app_package_name);
+			final TextView activityName = (TextView) app.findViewById(R.id.activity_name);
 			appIcon.setImageDrawable(appList.get(i).loadIcon(pm));
 			appName.setText(appList.get(i).loadLabel(pm));
-//			app.setOnClickListener(new OnClickListener() {
-//				@Override
-//				public void onClick(View v) {
-//					String packageName = ((TextView) v.findViewById(R.id.app_package_name))
-//							.getText().toString();
-//					Log.d(TAG, "onClick: " + packageName);
-//					Intent i = MyApplication.startApp(packageName);
-//					if (i == null) {
-//						Log.d(TAG, "onClick: Intent is null");
-//
-//					} else {
-//						context.startActivity(i);
-//					}
-//				}
-//			});
+			packageName.setText(appList.get(i).activityInfo.packageName);
+			activityName.setText(appList.get(i).activityInfo.name);
+			app.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					FloatWindowManager.getInstance(context).removeBigWindow();
+					String packageName = ((TextView) v.findViewById(R.id.app_package_name))
+							.getText().toString();
+					String activityName = ((TextView) v.findViewById(R.id.activity_name))
+							.getText().toString();
+					ComponentName name=new ComponentName(packageName,activityName);
+					Intent i=new Intent(Intent.ACTION_MAIN);
+					i.addCategory(Intent.CATEGORY_LAUNCHER);
+					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+							Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+					i.setComponent(name);
+					context.startActivity(i);
+				}
+			});
 
 		}
 	}
-
-//	//手势响应
-//	@Override
-//	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-//		Log.d(TAG, "onGesturePerformed: ");
-//		// TODO: 2017/3/5  记录绘制完成时间,写入日志
-//		// TODO: 2017/3/5 识别手势，返回APP数组
-//		gesturePanel.setVisibility(INVISIBLE);
-//		appPanel.setVisibility(VISIBLE);
-//		List<AppInfo> appInfos = MyApplication.getAppInfos().subList(4, 8);
-//
-//		for (int i = 0; i < 4; i++) {
-//			LinearLayout app = (LinearLayout) findViewById(ids[i]);
-//			ImageView appIcon = (ImageView) app.findViewById(R.id.app_icon);
-//			TextView appName = (TextView) app.findViewById(R.id.app_name);
-//			TextView appPackageName = (TextView) app.findViewById(R.id.app_package_name);
-//			appIcon.setImageDrawable(appInfos.get(i).getIcon());
-//			appName.setText(appInfos.get(i).getAppName());
-//			appPackageName.setText(appInfos.get(i).getPackageName());
-//			app.setOnClickListener(new OnClickListener() {
-//				@Override
-//				public void onClick(View v) {
-//					String packageName = ((TextView) v.findViewById(R.id.app_package_name))
-//							.getText().toString();
-//					Log.d(TAG, "onClick: " + packageName);
-//					Intent i = MyApplication.startApp(packageName);
-//					if (i == null) {
-//						Log.d(TAG, "onClick: Intent is null");
-//
-//					} else {
-//						context.startActivity(i);
-//					}
-//				}
-//			});
-//
-//		}
-//	}
 
 	@Override
 	public void onGesturingStarted(GestureOverlayView overlay) {

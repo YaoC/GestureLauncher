@@ -48,7 +48,7 @@ public class MainActivity extends Activity {
 
 	/**
 	 * 移除所有的悬浮窗
-	 * 
+	 *
 	 * @param view
 	 */
 	public void remove(View view) {
