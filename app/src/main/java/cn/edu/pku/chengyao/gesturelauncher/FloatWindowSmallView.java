@@ -15,11 +15,12 @@ import android.widget.TextView;
 
 
 /**
- * 小悬浮窗,用于初始显示
- * 
  * @author chengyao
- * 
- */
+ * date 2017/3/7
+ * mail chengyao09@hotmail.com
+ * 小悬浮窗
+ *
+ **/
 public class FloatWindowSmallView extends LinearLayout {
 
 	// 小悬浮窗的宽
@@ -143,7 +144,6 @@ public class FloatWindowSmallView extends LinearLayout {
 	/**
 	 * 获取状态栏的高度
 	 * 
-	 * @return
 	 */
 	private int getStatusBarHeight() {
 
@@ -163,13 +163,9 @@ public class FloatWindowSmallView extends LinearLayout {
 	/**
 	 * 单击接口
 	 * 
-	 * @author zhaokaiqiang
-	 * 
 	 */
 	public interface OnClickListener {
-
-		public void click();
-
+		 void click();
 	}
 
 }

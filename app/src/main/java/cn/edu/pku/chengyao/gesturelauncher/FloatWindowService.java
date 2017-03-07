@@ -13,17 +13,14 @@ import android.util.Log;
 
 /**
  * 悬浮窗后台服务
- * 
+ *
  * @author chengyao
- * 
+ *
  */
 
 public class FloatWindowService extends Service {
 
 	private static final String TAG = "GestureLauncher";
-
-	public static final String LAYOUT_RES_ID = "layoutResId";
-	public static final String ROOT_LAYOUT_ID = "rootLayoutId";
 
 	// 用于在线程中创建/移除/更新悬浮窗
 	private Handler handler = new Handler();
@@ -38,22 +35,15 @@ public class FloatWindowService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 
 		context = this;
-		layoutResId = intent.getIntExtra(LAYOUT_RES_ID, 0);
-		rootLayoutId = intent.getIntExtra(ROOT_LAYOUT_ID, 0);
-
-		if (layoutResId == 0 || rootLayoutId == 0) {
-			throw new IllegalArgumentException(
-					"layoutResId or rootLayoutId is illegal");
-		}
-
+        layoutResId = R.layout.float_window_small;
+        rootLayoutId = R.id.small_window_layout;
 		if (timer == null) {
 			timer = new Timer();
 			// 每500毫秒就执行一次刷新任务
 			timer.scheduleAtFixedRate(new RefreshTask(), 0, 500);
 		}
 
-
-		return super.onStartCommand(intent, flags, startId);
+		return START_STICKY;
 	}
 
 	@Override

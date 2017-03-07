@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.gesture.Gesture;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -12,9 +13,11 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by chengyao on 2017/3/5.
- */
-
+ * @author chengyao
+ * date 2017/3/7
+ * mail chengyao09@hotmail.com
+ *
+ **/
 public class MyApplication extends Application{
 
     private static Application mApplication;
@@ -50,8 +53,11 @@ public class MyApplication extends Application{
 
     }
 
-    public static List<ResolveInfo> getLaunchables(){
-        return launchables.subList(0, 4);
+    //  根据输入的手势返回4个APP，现在只是随机返回四个
+    public static List<ResolveInfo> getLaunchables(Gesture gesture){
+        // TODO: 2017/3/7 手势识别匹配
+        int idx=(int)(Math.random()*launchables.size());
+        return launchables.subList(idx, idx + 4);
     }
 
 

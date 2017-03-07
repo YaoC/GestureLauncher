@@ -5,11 +5,12 @@ import android.content.Intent;
 import android.view.WindowManager;
 
 /**
- * 悬浮窗管理器
- * 
  * @author chengyao
- * 
- */
+ * date 2017/3/7
+ * mail chengyao09@hotmail.com
+ * 悬浮窗管理器
+ *
+ **/
 public class FloatWindowManager {
 
 	// 小悬浮窗对象
@@ -54,8 +55,6 @@ public class FloatWindowManager {
 
 	/**
 	 * 将小悬浮窗从屏幕上移除
-	 * 
-	 * @param context
 	 */
 	public void removeSmallWindow() {
 		if (smallWindow != null) {
@@ -65,6 +64,10 @@ public class FloatWindowManager {
 		}
 	}
 
+	/**
+	 * 小悬浮窗点击事件
+	 * @param listener
+     */
 	public void setOnClickListener(FloatWindowSmallView.OnClickListener listener) {
 		if (smallWindow != null) {
 			smallWindow.setOnClickListener(listener);
@@ -73,9 +76,7 @@ public class FloatWindowManager {
 
 	/**
 	 * 创建大悬浮窗
-	 * 
 	 * @param context
-	 *            必须为应用程序的Context.
 	 */
 	public void createBigWindow(Context context) {
 		WindowManager windowManager = getWindowManager();
@@ -87,8 +88,6 @@ public class FloatWindowManager {
 
 	/**
 	 * 将大悬浮窗从屏幕上移除
-	 * 
-	 * @param context
 	 */
 	public void removeBigWindow() {
 		if (bigWindow != null) {
@@ -98,6 +97,9 @@ public class FloatWindowManager {
 		}
 	}
 
+	/**
+	 * 移除所有悬浮窗
+	 */
 	public void removeAll() {
 
 		context.stopService(new Intent(context, FloatWindowService.class));
@@ -108,7 +110,6 @@ public class FloatWindowManager {
 
 	/**
 	 * 是否有悬浮窗显示(包括小悬浮窗和大悬浮)
-	 * 
 	 * @return 有悬浮窗显示在桌面上返回true，没有的话返回false
 	 */
 	public boolean isWindowShowing() {
@@ -117,9 +118,6 @@ public class FloatWindowManager {
 
 	/**
 	 * 如果WindowManager还未创建，则创建新的WindowManager返回。否则返回当前已创建的WindowManager
-	 * 
-	 * @param context
-	 * @return
 	 */
 	private WindowManager getWindowManager() {
 		if (mWindowManager == null) {

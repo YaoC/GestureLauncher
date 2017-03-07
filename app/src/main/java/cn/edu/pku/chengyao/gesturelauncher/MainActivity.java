@@ -9,11 +9,12 @@ import android.view.View;
 
 
 /**
- * 示例
- * 
  * @author chengyao
- * 
- */
+ * date 2017/3/7
+ * mail chengyao09@hotmail.com
+ * 手势启动器主界面，提供添加／关闭悬浮窗的功能
+ *
+ **/
 public class MainActivity extends Activity {
 
 	private FloatWindowManager floatWindowManager;
@@ -24,7 +25,6 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-
 		context = this;
 		floatWindowManager = FloatWindowManager.getInstance(context);
 
@@ -32,19 +32,13 @@ public class MainActivity extends Activity {
 
 	/**
 	 * 显示小窗口
-	 * 
 	 * @param view
 	 */
 	public void show(View view) {
-		// 需要传递小悬浮窗布局，以及根布局的id，启动后台服务
+		//	启动悬浮窗服务
 		Intent intent = new Intent(context, FloatWindowService.class);
-		intent.putExtra(FloatWindowService.LAYOUT_RES_ID,
-				R.layout.float_window_small);
-		intent.putExtra(FloatWindowService.ROOT_LAYOUT_ID,
-				R.id.small_window_layout);
 		startService(intent);
 	}
-
 
 	/**
 	 * 移除所有的悬浮窗
@@ -55,6 +49,12 @@ public class MainActivity extends Activity {
 		floatWindowManager.removeAll();
 	}
 
+	/**
+	 * 重载 MainActivity 下的返回键为关闭二级悬浮窗（手势板）
+	 * @param keyCode
+	 * @param event
+     * @return
+     */
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 
@@ -64,7 +64,6 @@ public class MainActivity extends Activity {
 			floatWindowManager.removeBigWindow();
 			return true;
 		}
-
 		return super.onKeyDown(keyCode, event);
 	}
 

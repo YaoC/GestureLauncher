@@ -18,9 +18,18 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
 
-
+/**
+ * project: GestureLauncher
+ * package: cn.edu.pku.chengyao.gesturelauncher
+ * author: chengyao
+ * date: 2017/3/7
+ * mail: chengyao09@hotmail.com
+ *
+ **/
 public class FloatWindowBigView extends RelativeLayout implements
 		GestureOverlayView.OnGesturePerformedListener,
 		GestureOverlayView.OnGesturingListener {
@@ -68,10 +77,8 @@ public class FloatWindowBigView extends RelativeLayout implements
 
 		bigWindowParams = new WindowManager.LayoutParams();
 		// 设置显示的位置，默认的是屏幕中心
-		bigWindowParams.x = ScreenUtils.getScreenWidth(context) / 2 - viewWidth
-				/ 2;
-		bigWindowParams.y = ScreenUtils.getScreenHeight(context) / 2
-				- viewHeight / 2;
+		bigWindowParams.x = ScreenUtils.getScreenWidth(context) / 2 - viewWidth / 2;
+		bigWindowParams.y = ScreenUtils.getScreenHeight(context) / 2 - viewHeight / 2;
 		bigWindowParams.type = WindowManager.LayoutParams.TYPE_PHONE;
 		bigWindowParams.format = PixelFormat.RGBA_8888;
 
@@ -112,12 +119,12 @@ public class FloatWindowBigView extends RelativeLayout implements
 	//手势响应
 	@Override
 	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-		Log.d(TAG, "onGesturePerformed: ");
-		// TODO: 2017/3/5  记录绘制完成时间,写入日志
-		// TODO: 2017/3/5 识别手势，返回APP数组
 		gesturePanel.setVisibility(INVISIBLE);
 		appPanel.setVisibility(VISIBLE);
-		List<ResolveInfo> appList = MyApplication.getLaunchables();
+		// TODO: 2017/3/5 识别手势，返回APP数组
+		List<ResolveInfo> appList = MyApplication.getLaunchables(gesture);
+		Log.d(TAG, "onGesturePerformed: 手势结束时间"+getTime());
+		// TODO: 2017/3/5  记录绘制完成时间,写入日志
 		Log.d(TAG, "onGesturePerformed: "+appList);
 		PackageManager pm = MyApplication.getMyPackageManager();
 		for (int i = 0; i < 4; i++) {
@@ -153,8 +160,8 @@ public class FloatWindowBigView extends RelativeLayout implements
 
 	@Override
 	public void onGesturingStarted(GestureOverlayView overlay) {
-		Log.d(TAG, "onGesturingStarted: ");
-		// TODO: 2017/3/5  记录开始时间
+		Log.d(TAG, "onGesturingStarted: 手势开始时间"+getTime());
+		// TODO: 2017/3/5  在日志中记录手势开始时间
 	}
 
 	@Override
@@ -162,5 +169,11 @@ public class FloatWindowBigView extends RelativeLayout implements
 		Log.d(TAG, "onGesturingEnded: ");
 	}
 
+	//	获取当前时间
+	private String getTime(){
+		SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd日 HH:mm:ss ");
+		Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+		return formatter.format(curDate);
+	}
 
 }
