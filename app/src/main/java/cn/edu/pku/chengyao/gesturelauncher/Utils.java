@@ -3,11 +3,13 @@ package cn.edu.pku.chengyao.gesturelauncher;
 import android.content.Context;
 import android.view.WindowManager;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
- * 屏幕帮助类
  * @author chengyao
  */
-public class ScreenUtils {
+public class Utils {
 
 	/**
 	 * 获取屏幕宽度
@@ -31,6 +33,13 @@ public class ScreenUtils {
 		return ((WindowManager) context
 				.getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay()
 				.getHeight();
+	}
+
+	//	获取当前时间
+	public static String getTime(){
+		SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss ");
+		Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+		return formatter.format(curDate);
 	}
 
 }

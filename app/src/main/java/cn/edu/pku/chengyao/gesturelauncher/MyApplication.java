@@ -46,11 +46,11 @@ public class MyApplication extends Application{
         List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
         Map<String, ResolveInfo> temp = new HashMap<>();
         for (ResolveInfo resolveInfo : apps) {
-            Log.d(TAG, "initAppInfos2: "+resolveInfo.activityInfo.packageName);
+//            Log.d(TAG, "initAppInfos2: "+resolveInfo.activityInfo.packageName);
             temp.put(resolveInfo.activityInfo.packageName, resolveInfo);
         }
         launchables = new ArrayList<>(temp.values());
-
+        Log.d(TAG, "initAppInfos2: runing apps "+ProcessManager.getRunningApps());
     }
 
     //  根据输入的手势返回4个APP，现在只是随机返回四个

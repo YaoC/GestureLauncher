@@ -85,8 +85,8 @@ public class FloatWindowSmallView extends LinearLayout {
 		smallWindowParams.gravity = Gravity.LEFT | Gravity.TOP;
 		smallWindowParams.width = viewWidth;
 		smallWindowParams.height = viewHeight;
-		smallWindowParams.x = ScreenUtils.getScreenWidth(context);
-		smallWindowParams.y = ScreenUtils.getScreenHeight(context) / 2;
+		smallWindowParams.x = Utils.getScreenWidth(context);
+		smallWindowParams.y = Utils.getScreenHeight(context) / 2;
 
 	}
 

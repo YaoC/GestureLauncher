@@ -77,8 +77,8 @@ public class FloatWindowBigView extends RelativeLayout implements
 
 		bigWindowParams = new WindowManager.LayoutParams();
 		// 设置显示的位置，默认的是屏幕中心
-		bigWindowParams.x = ScreenUtils.getScreenWidth(context) / 2 - viewWidth / 2;
-		bigWindowParams.y = ScreenUtils.getScreenHeight(context) / 2 - viewHeight / 2;
+		bigWindowParams.x = Utils.getScreenWidth(context) / 2 - viewWidth / 2;
+		bigWindowParams.y = Utils.getScreenHeight(context) / 2 - viewHeight / 2;
 		bigWindowParams.type = WindowManager.LayoutParams.TYPE_PHONE;
 		bigWindowParams.format = PixelFormat.RGBA_8888;
 
@@ -123,7 +123,7 @@ public class FloatWindowBigView extends RelativeLayout implements
 		appPanel.setVisibility(VISIBLE);
 		// TODO: 2017/3/5 识别手势，返回APP数组
 		List<ResolveInfo> appList = MyApplication.getLaunchables(gesture);
-		Log.d(TAG, "onGesturePerformed: 手势结束时间"+getTime());
+		Log.d(TAG, "onGesturePerformed: 手势结束时间" + Utils.getTime());
 		// TODO: 2017/3/5  记录绘制完成时间,写入日志
 		Log.d(TAG, "onGesturePerformed: "+appList);
 		PackageManager pm = MyApplication.getMyPackageManager();
@@ -160,7 +160,7 @@ public class FloatWindowBigView extends RelativeLayout implements
 
 	@Override
 	public void onGesturingStarted(GestureOverlayView overlay) {
-		Log.d(TAG, "onGesturingStarted: 手势开始时间"+getTime());
+		Log.d(TAG, "onGesturingStarted: 手势开始时间"+Utils.getTime());
 		// TODO: 2017/3/5  在日志中记录手势开始时间
 	}
 
@@ -169,11 +169,6 @@ public class FloatWindowBigView extends RelativeLayout implements
 		Log.d(TAG, "onGesturingEnded: ");
 	}
 
-	//	获取当前时间
-	private String getTime(){
-		SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd日 HH:mm:ss ");
-		Date curDate = new Date(System.currentTimeMillis());//获取当前时间
-		return formatter.format(curDate);
-	}
+
 
 }

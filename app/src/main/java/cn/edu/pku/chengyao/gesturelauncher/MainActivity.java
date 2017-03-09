@@ -26,6 +26,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		context = this;
+		Intent i = new Intent(context,AppMonitorService.class);
+		startService(i);
 		floatWindowManager = FloatWindowManager.getInstance(context);
 
 	}
