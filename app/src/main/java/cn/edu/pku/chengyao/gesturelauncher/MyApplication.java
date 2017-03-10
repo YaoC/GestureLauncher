@@ -54,10 +54,22 @@ public class MyApplication extends Application{
     }
 
     //  根据输入的手势返回4个APP，现在只是随机返回四个
-    public static List<ResolveInfo> getLaunchables(Gesture gesture){
+    public static List<Map<String,Object>> getLaunchables(Gesture gesture){
         // TODO: 2017/3/7 手势识别匹配
-        int idx=(int)(Math.random()*launchables.size());
-        return launchables.subList(idx, idx + 4);
+        int idx=(int)(Math.random()*(launchables.size()-9));
+        List<ResolveInfo> appList = launchables.subList(idx, idx + 9);
+
+        List<Map<String, Object>> apps = new ArrayList<>();
+        for (ResolveInfo resolveInfo : appList) {
+            Map<String, Object> app = new HashMap<>();
+            app.put("appName", resolveInfo.loadLabel(pm));
+            app.put("activityName", resolveInfo.activityInfo.name);
+            app.put("packageName", resolveInfo.activityInfo.packageName);
+            app.put("icon", resolveInfo.loadIcon(pm));
+            apps.add(app);
+        }
+        return apps;
+
     }
 
 

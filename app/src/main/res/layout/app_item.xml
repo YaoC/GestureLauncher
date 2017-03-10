@@ -3,9 +3,8 @@
     android:orientation="vertical"
     android:layout_width="70dp"
     android:layout_height="80dp"
-    android:background="#654321">
-
-
+    android:layout_gravity="center"
+    android:background="#969696">
     <ImageView
         android:id="@+id/app_icon"
         android:layout_gravity="center"

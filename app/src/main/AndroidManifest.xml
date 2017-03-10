@@ -20,6 +20,7 @@
             </intent-filter>
         </activity>
 
+        <service android:name=".AppMonitorService"/>
         <service android:name="cn.edu.pku.chengyao.gesturelauncher.FloatWindowService" >
         </service>
     </application>

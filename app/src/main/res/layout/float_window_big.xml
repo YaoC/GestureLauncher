@@ -8,26 +8,21 @@
     android:descendantFocusability="blocksDescendants">
 
 
-    <LinearLayout
+    <!--三列、网格水平垂直间距10dp-->
+    <GridView
         android:id="@+id/app_panel"
         android:layout_width="match_parent"
-        android:layout_height="80dip"
-        android:gravity="center_horizontal|center_vertical"
-        android:background="#00ffff"
-        android:orientation="horizontal">
+        android:layout_height="wrap_content"
+        android:numColumns="3"
+        android:layout_marginTop="20dp"
+        android:paddingTop="20dp"
+        android:paddingBottom="20dp"
+        android:horizontalSpacing="10dp"
+        android:verticalSpacing="10dp"
+        android:gravity="center"
+        android:background="#969696">
 
-        <include android:id="@+id/app_0"
-        layout="@layout/app_item" />
-
-        <include android:id="@+id/app_1"
-            layout="@layout/app_item" />
-
-        <include android:id="@+id/app_2"
-            layout="@layout/app_item" />
-
-        <include android:id="@+id/app_3"
-            layout="@layout/app_item" />
-    </LinearLayout>
+    </GridView>
 
     <android.gesture.GestureOverlayView
         android:id="@+id/gesture_panel"

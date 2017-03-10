@@ -55,6 +55,7 @@ public class FloatWindowService extends Service {
 		Log.d(TAG, "onDestroy: END!!!!");
 	}
 
+
 	private class RefreshTask extends TimerTask {
 
 		@Override

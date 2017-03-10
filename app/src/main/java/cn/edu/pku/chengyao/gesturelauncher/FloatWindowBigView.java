@@ -8,19 +8,24 @@ import android.content.pm.ResolveInfo;
 import android.gesture.Gesture;
 import android.gesture.GestureOverlayView;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * project: GestureLauncher
@@ -49,14 +54,7 @@ public class FloatWindowBigView extends RelativeLayout implements
 	private GestureOverlayView gesturePanel;
 
 	//	APP面板
-	private LinearLayout appPanel;
-
-	private int[] ids = {
-			R.id.app_0,
-			R.id.app_1,
-			R.id.app_2,
-			R.id.app_3
-	};
+	private GridView appPanel;
 
 	public FloatWindowBigView(Context context) {
 		super(context);
@@ -70,7 +68,7 @@ public class FloatWindowBigView extends RelativeLayout implements
 
 
 		//	隐藏 app_panel
-		appPanel = (LinearLayout) findViewById(R.id.app_panel);
+		appPanel = (GridView) findViewById(R.id.app_panel);
 		appPanel.setVisibility(INVISIBLE);
 
 		Log.d(TAG, "FloatWindowBigView: viewWidth=" + viewWidth + "  viewHeight=" + viewHeight);
@@ -122,45 +120,51 @@ public class FloatWindowBigView extends RelativeLayout implements
 		gesturePanel.setVisibility(INVISIBLE);
 		appPanel.setVisibility(VISIBLE);
 		// TODO: 2017/3/5 识别手势，返回APP数组
-		List<ResolveInfo> appList = MyApplication.getLaunchables(gesture);
-		Log.d(TAG, "onGesturePerformed: 手势结束时间" + Utils.getTime());
+		List<Map<String, Object>> appList = MyApplication.getLaunchables(gesture);
+		Log.d(TAG, "onGesturePerformed: 手势结束时间 " + Utils.getTime());
 		// TODO: 2017/3/5  记录绘制完成时间,写入日志
-		Log.d(TAG, "onGesturePerformed: "+appList);
-		PackageManager pm = MyApplication.getMyPackageManager();
-		for (int i = 0; i < 4; i++) {
-			LinearLayout app = (LinearLayout) findViewById(ids[i]);
-			ImageView appIcon = (ImageView) app.findViewById(R.id.app_icon);
-			TextView appName = (TextView) app.findViewById(R.id.app_name);
-			TextView packageName = (TextView) app.findViewById(R.id.app_package_name);
-			final TextView activityName = (TextView) app.findViewById(R.id.activity_name);
-			appIcon.setImageDrawable(appList.get(i).loadIcon(pm));
-			appName.setText(appList.get(i).loadLabel(pm));
-			packageName.setText(appList.get(i).activityInfo.packageName);
-			activityName.setText(appList.get(i).activityInfo.name);
-			app.setOnClickListener(new OnClickListener() {
-				@Override
-				public void onClick(View v) {
-					FloatWindowManager.getInstance(context).removeBigWindow();
-					String packageName = ((TextView) v.findViewById(R.id.app_package_name))
-							.getText().toString();
-					String activityName = ((TextView) v.findViewById(R.id.activity_name))
-							.getText().toString();
-					ComponentName name=new ComponentName(packageName,activityName);
-					Intent i=new Intent(Intent.ACTION_MAIN);
-					i.addCategory(Intent.CATEGORY_LAUNCHER);
-					i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-							Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-					i.setComponent(name);
-					context.startActivity(i);
+		SimpleAdapter simpleAdapter = new SimpleAdapter(
+				context, appList, R.layout.app_item,
+				new String[]{"appName", "activityName", "packageName", "icon"},
+				new int[]{R.id.app_name, R.id.activity_name, R.id.app_package_name, R.id.app_icon});
+		appPanel.setAdapter(simpleAdapter);
+		//加载Drawable
+		simpleAdapter.setViewBinder(new SimpleAdapter.ViewBinder() {
+			@Override
+			public boolean setViewValue(View view, Object data, String arg2) {
+				if(view instanceof ImageView && data instanceof Drawable){
+					ImageView iv = (ImageView)view;
+					iv.setImageDrawable((Drawable)data);
+					return true;
+				}else{
+					return false;
 				}
-			});
-
-		}
+			}
+		});
+		appPanel.setOnItemClickListener(new AdapterView.OnItemClickListener(){
+			@Override
+			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+				//	关闭appPanel
+				FloatWindowManager.getInstance(context).removeBigWindow();
+				//	打开点击的APP
+				String packageName = ((TextView) v.findViewById(R.id.app_package_name))
+							.getText().toString();
+				String activityName = ((TextView) v.findViewById(R.id.activity_name))
+							.getText().toString();
+				ComponentName name=new ComponentName(packageName,activityName);
+				Intent i=new Intent(Intent.ACTION_MAIN);
+				i.addCategory(Intent.CATEGORY_LAUNCHER);
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+						Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+				i.setComponent(name);
+				context.startActivity(i);
+			}
+		});
 	}
 
 	@Override
 	public void onGesturingStarted(GestureOverlayView overlay) {
-		Log.d(TAG, "onGesturingStarted: 手势开始时间"+Utils.getTime());
+		Log.d(TAG, "onGesturingStarted: 手势开始时间 "+Utils.getTime());
 		// TODO: 2017/3/5  在日志中记录手势开始时间
 	}
 
