@@ -3,8 +3,6 @@ package cn.edu.pku.chengyao.gesturelauncher;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.gesture.Gesture;
 import android.gesture.GestureOverlayView;
 import android.graphics.PixelFormat;
@@ -17,13 +15,10 @@ import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -55,6 +50,8 @@ public class FloatWindowBigView extends RelativeLayout implements
 
 	//	APP面板
 	private GridView appPanel;
+
+	private String startTime;
 
 	public FloatWindowBigView(Context context) {
 		super(context);
@@ -123,6 +120,8 @@ public class FloatWindowBigView extends RelativeLayout implements
 		List<Map<String, Object>> appList = MyApplication.getLaunchables(gesture);
 		Log.d(TAG, "onGesturePerformed: 手势结束时间 " + Utils.getTime());
 		// TODO: 2017/3/5  记录绘制完成时间,写入日志
+		String endTime = Utils.getTime();
+		Utils.appendLog(context, "gesture", MyApplication.getMacAddress() + "," + startTime + "," + endTime);
 		SimpleAdapter simpleAdapter = new SimpleAdapter(
 				context, appList, R.layout.app_item,
 				new String[]{"appName", "activityName", "packageName", "icon"},
@@ -144,6 +143,8 @@ public class FloatWindowBigView extends RelativeLayout implements
 		appPanel.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
+				//	标记该App是由GestureLauncher打开的
+				MyApplication.setStartFromGestureLauncher();
 				//	关闭appPanel
 				FloatWindowManager.getInstance(context).removeBigWindow();
 				//	打开点击的APP
@@ -166,6 +167,8 @@ public class FloatWindowBigView extends RelativeLayout implements
 	public void onGesturingStarted(GestureOverlayView overlay) {
 		Log.d(TAG, "onGesturingStarted: 手势开始时间 "+Utils.getTime());
 		// TODO: 2017/3/5  在日志中记录手势开始时间
+		startTime = Utils.getTime();
+
 	}
 
 	@Override

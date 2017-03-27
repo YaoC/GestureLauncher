@@ -1,6 +1,8 @@
 package cn.edu.pku.chengyao.gesturelauncher;
 
+import android.app.ActivityManager;
 import android.app.Service;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
@@ -61,15 +63,20 @@ public class AppMonitorService extends Service {
             handler.post(new Runnable() {
                 @Override
                 public void run() {
-                    List<String> currentApps = ProcessManager.getRunningAppNames();
-                    List<String> newApps = new ArrayList<String>(currentApps);
-                    newApps.removeAll(lastApps);
-                    if (!newApps.isEmpty()) {
-                        for (String app : newApps) {
-                            Log.d(TAG, "run: " + Utils.getTime() + " " + app);
-                        }
+//                    List<String> currentApps = ProcessManager.getRunningAppNames();
+//                    List<String> newApps = new ArrayList<String>(currentApps);
+//                    newApps.removeAll(lastApps);
+//                    if (!newApps.isEmpty()) {
+//                        for (String app : newApps) {
+//                            Log.d(TAG, "run: " + Utils.getTime() + " " + app);
+//                        }
+//                    }
+//                    lastApps = currentApps;
+                    ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+                    List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfo = am.getRunningAppProcesses();
+                    for (int i = 0; i < runningAppProcessInfo.size(); i++) {
+                        Log.v("Proc: ", runningAppProcessInfo.get(i).processName);
                     }
-                    lastApps = currentApps;
 
                 }
             });

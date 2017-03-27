@@ -1,10 +1,19 @@
 package cn.edu.pku.chengyao.gesturelauncher;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.WindowManager;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Locale;
 
 /**
  * @author chengyao
@@ -37,9 +46,56 @@ public class Utils {
 
 	//	获取当前时间
 	public static String getTime(){
-		SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss ");
+		SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd HH:mm:ss",Locale.CHINA);
 		Date curDate = new Date(System.currentTimeMillis());//获取当前时间
 		return formatter.format(curDate);
+	}
+
+	public static String getDate(){
+		SimpleDateFormat formatter = new SimpleDateFormat ("yyyy-MM-dd", Locale.CHINA);
+		Date curDate = new Date(System.currentTimeMillis());//获取当前时间
+		return formatter.format(curDate);
+	}
+
+
+	public static void appendLog(Context context, String type, String text) {
+
+
+		File logFileDir = context.getCacheDir();
+		File logFile = new File(logFileDir.getPath() + "/log-" + type + "-" + MyApplication.getMacAddress() + "-" + getDate() + ".txt");
+		if (!logFile.exists()) {
+			try {
+
+				logFile.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		try {
+			//BufferedWriter for performance, true to set append to file flag
+			BufferedWriter buf = new BufferedWriter(new FileWriter(logFile, true));
+			buf.append(text);
+			buf.newLine();
+			buf.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		try {
+			BufferedReader b = new BufferedReader(new FileReader(logFile));
+			String tmp = null;
+			try {
+				while ((tmp = b.readLine()) != null) {
+					Log.d("line", "appendLog: " + tmp);
+				}
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+
+
 	}
 
 }

@@ -12,9 +12,28 @@
 
 
     <Button
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:onClick="remove"
+    android:text="移除悬浮窗" />
+
+    <Button
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="remove"
-        android:text="移除悬浮窗" />
+        android:onClick="testLeanCloud"
+        android:text="LeanCloud日志测试" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="appendLogToFile"
+        android:text="日志写入文件" />
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:onClick="activityTopTest"
+        android:text="栈顶测试" />
+
 
 </LinearLayout>
