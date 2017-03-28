@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/transparent"
-    android:padding="40dp"
-    android:descendantFocusability="blocksDescendants">
+    android:padding="40dp">
 
 
     <!--三列、网格水平垂直间距10dp-->
@@ -24,14 +23,27 @@
 
     </GridView>
 
-    <android.gesture.GestureOverlayView
-        android:id="@+id/gesture_panel"
+    <LinearLayout
+        android:id="@+id/flow_big"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="#ffffff"
-        android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:orientation="vertical">
+        <Button
+            android:id="@+id/open_app"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#969696"
+            android:text="Gesture Launcher"/>
+        <android.gesture.GestureOverlayView
+            android:id="@+id/gesture_panel"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#ffffff"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true">
 
-    </android.gesture.GestureOverlayView>
+        </android.gesture.GestureOverlayView>
+    </LinearLayout>
+
 </RelativeLayout>

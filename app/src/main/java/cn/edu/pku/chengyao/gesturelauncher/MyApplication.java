@@ -1,8 +1,6 @@
 package cn.edu.pku.chengyao.gesturelauncher;
 
-import android.app.ActivityManager;
 import android.app.Application;
-import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
@@ -14,8 +12,10 @@ import com.avos.avoscloud.AVOSCloud;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * @author chengyao
@@ -62,14 +62,18 @@ public class MyApplication extends Application{
         pm = mApplication.getPackageManager();
         Intent main=new Intent(Intent.ACTION_MAIN, null);
         List<ResolveInfo> apps = pm.queryIntentActivities(main, 0);
+        Set<String> systemApps = getSystemApps();
         Map<String, ResolveInfo> temp = new HashMap<>();
         for (ResolveInfo resolveInfo : apps) {
-//            Log.d(TAG, "initAppInfos2: "+resolveInfo.activityInfo.packageName);
-            temp.put(resolveInfo.activityInfo.packageName, resolveInfo);
+            String packageName = resolveInfo.activityInfo.packageName;
+            if (!systemApps.contains(packageName)) {
+                temp.put(packageName, resolveInfo);
+            }
         }
         launchables = new ArrayList<>(temp.values());
         launchableAppNames = new ArrayList<>(temp.keySet());
-        Log.d(TAG, "initAppInfos2: runing apps "+ProcessManager.getRunningApps());
+        Log.d(TAG, "initAppInfos2: "+launchableAppNames);
+//        Log.d(TAG, "initAppInfos2: runing apps "+ProcessManager.getRunningApps());
     }
 
     //  根据输入的手势返回4个APP，现在只是随机返回四个
@@ -127,5 +131,18 @@ public class MyApplication extends Application{
         return launchableAppNames;
     }
 
+    private Set<String> getSystemApps(){
+        Set<String> systemApps = new HashSet<>();
+        systemApps.add(getSystemAppPackageName(Intent.CATEGORY_DESK_DOCK));
+        systemApps.add(getSystemAppPackageName(Intent.CATEGORY_HOME));
+        return systemApps;
+    }
+
+    private String getSystemAppPackageName(String category){
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(category);
+        ResolveInfo res = getPackageManager().resolveActivity(intent, 0);
+        return res.activityInfo.packageName;
+    }
 
 }

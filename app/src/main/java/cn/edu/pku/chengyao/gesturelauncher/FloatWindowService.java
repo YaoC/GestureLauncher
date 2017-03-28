@@ -1,6 +1,5 @@
 package cn.edu.pku.chengyao.gesturelauncher;
 
-import java.util.StringTokenizer;
 import java.util.Timer;
 import java.util.TimerTask;
 

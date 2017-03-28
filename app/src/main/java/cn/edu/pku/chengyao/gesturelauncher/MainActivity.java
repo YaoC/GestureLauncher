@@ -3,12 +3,16 @@ package cn.edu.pku.chengyao.gesturelauncher;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.KeyEvent;
 import android.view.View;
+
+import eu.chainfire.libsuperuser.Shell;
+import eu.chainfire.libsuperuser.StreamGobbler;
 
 /**
  * @author chengyao
@@ -18,6 +22,8 @@ import android.view.View;
  *
  **/
 public class MainActivity extends Activity {
+
+	private static final String TAG = "GestureLauncher";
 
 	private FloatWindowManager floatWindowManager;
 
@@ -29,9 +35,20 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		context = this;
-		Intent i = new Intent(context,AppMonitorService.class);
-		startService(i);
+//		Intent i = new Intent(context,AppMonitorService.class);
+//		startService(i);
 		floatWindowManager = FloatWindowManager.getInstance(context);
+		uploadLogs();
+//		Intent intent = new Intent(Intent.ACTION_MAIN);
+//		intent.addCategory(Intent.CATEGORY_DESK_DOCK);
+//		ResolveInfo res = getPackageManager().resolveActivity(intent, 0);
+//		Toast.makeText(this, res.activityInfo.packageName, Toast.LENGTH_LONG).show();
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		uploadLogs();
 	}
 
 	/**
@@ -90,15 +107,22 @@ public class MainActivity extends Activity {
 		if (keyCode == KeyEvent.KEYCODE_BACK
 				&& event.getAction() == KeyEvent.ACTION_DOWN) {
 			floatWindowManager.removeBigWindow();
+			Intent i= new Intent(Intent.ACTION_MAIN);
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			i.addCategory(Intent.CATEGORY_HOME);
+			startActivity(i);
 			return true;
 		}
 		return super.onKeyDown(keyCode, event);
 	}
 
+	@Override
+	public void onBackPressed() {
+		super.onBackPressed();
+	}
+
 	//	LeanCloud测试
 	public void testLeanCloud(View view) {
-//		LeanCloudLog.AppLaunchLogObject test1 = new LeanCloudLog.AppLaunchLogObject("02:00:00:00:00:00", Utils.getTime(),true);
-//		LeanCloudLog.uploadAppLaunchLog(test1);
 		LeanCloudLog.uploadAppLogFile(context);
 	}
 
@@ -106,11 +130,22 @@ public class MainActivity extends Activity {
 		Utils.appendLog(context,"usage",Utils.getTime() + ",1");
 	}
 
-	public  void activityTopTest(View view){
-//		ActivityManager am = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-//		List<ActivityManager.RunningAppProcessInfo> runningAppProcessInfo = am.getRunningAppProcesses();
-//		for (int i = 0; i < runningAppProcessInfo.size(); i++) {
-//			Log.v("Proc: ", runningAppProcessInfo.get(i).processName);
-//		}
+
+	private void uploadLogs(){
+		final String key = "lastLogUploadDate";
+		final long oneDay = 86400000;
+//		测试用
+//		final long oneDay = 60000;
+		SharedPreferences sharedPreferences = getSharedPreferences(TAG,MODE_PRIVATE);
+		long lastLogUploadDate = sharedPreferences.getLong(key, 0);
+		if (lastLogUploadDate != 0) {
+			long currentTime = System.currentTimeMillis();
+			if (currentTime - lastLogUploadDate >= oneDay) {
+				LeanCloudLog.uploadAppLogFile(context);
+			}
+		}
+		SharedPreferences.Editor editor = sharedPreferences.edit();
+		editor.putLong(key, System.currentTimeMillis());
+		editor.apply();
 	}
 }

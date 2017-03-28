@@ -1,14 +1,10 @@
 package cn.edu.pku.chengyao.gesturelauncher;
 
 import android.content.Context;
-import android.util.Log;
 import android.view.WindowManager;
 
-import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -81,19 +77,6 @@ public class Utils {
 			e.printStackTrace();
 		}
 
-		try {
-			BufferedReader b = new BufferedReader(new FileReader(logFile));
-			String tmp = null;
-			try {
-				while ((tmp = b.readLine()) != null) {
-					Log.d("line", "appendLog: " + tmp);
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
 
 
 	}

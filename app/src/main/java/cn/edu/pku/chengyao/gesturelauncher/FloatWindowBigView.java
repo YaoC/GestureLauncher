@@ -5,22 +5,32 @@ import android.content.Context;
 import android.content.Intent;
 import android.gesture.Gesture;
 import android.gesture.GestureOverlayView;
+import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.renderscript.Allocation;
+import android.renderscript.RenderScript;
+import android.renderscript.ScriptIntrinsicBlur;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
 import java.util.List;
 import java.util.Map;
+
+import static android.R.attr.radius;
 
 /**
  * project: GestureLauncher
@@ -49,7 +59,9 @@ public class FloatWindowBigView extends RelativeLayout implements
 	private GestureOverlayView gesturePanel;
 
 	//	APP面板
+	private LinearLayout flowBig;
 	private GridView appPanel;
+	private Button openApp;
 
 	private String startTime;
 
@@ -68,7 +80,7 @@ public class FloatWindowBigView extends RelativeLayout implements
 		appPanel = (GridView) findViewById(R.id.app_panel);
 		appPanel.setVisibility(INVISIBLE);
 
-		Log.d(TAG, "FloatWindowBigView: viewWidth=" + viewWidth + "  viewHeight=" + viewHeight);
+//		Log.d(TAG, "FloatWindowBigView: viewWidth=" + viewWidth + "  viewHeight=" + viewHeight);
 
 		bigWindowParams = new WindowManager.LayoutParams();
 		// 设置显示的位置，默认的是屏幕中心
@@ -99,6 +111,21 @@ public class FloatWindowBigView extends RelativeLayout implements
 			}
 		});
 
+		flowBig = (LinearLayout) findViewById(R.id.flow_big);
+		openApp = (Button) findViewById(R.id.open_app);
+		openApp.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				FloatWindowManager.getInstance(context).removeBigWindow();
+				ComponentName name = new ComponentName(context.getPackageName(), context.getPackageName() + ".MainActivity");
+				Intent i=new Intent(Intent.ACTION_MAIN);
+				i.addCategory(Intent.CATEGORY_LAUNCHER);
+				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+						Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+				i.setComponent(name);
+				context.startActivity(i);
+			}
+		});
 		//	手势
 		gesturePanel = (GestureOverlayView) findViewById(R.id.gesture_panel);
 		//	设置手势可以多笔完成
@@ -114,11 +141,11 @@ public class FloatWindowBigView extends RelativeLayout implements
 	//手势响应
 	@Override
 	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
-		gesturePanel.setVisibility(INVISIBLE);
+		flowBig.setVisibility(INVISIBLE);
 		appPanel.setVisibility(VISIBLE);
 		// TODO: 2017/3/5 识别手势，返回APP数组
 		List<Map<String, Object>> appList = MyApplication.getLaunchables(gesture);
-		Log.d(TAG, "onGesturePerformed: 手势结束时间 " + Utils.getTime());
+//		Log.d(TAG, "onGesturePerformed: 手势结束时间 " + Utils.getTime());
 		// TODO: 2017/3/5  记录绘制完成时间,写入日志
 		String endTime = Utils.getTime();
 		Utils.appendLog(context, "gesture", MyApplication.getMacAddress() + "," + startTime + "," + endTime);
@@ -134,38 +161,41 @@ public class FloatWindowBigView extends RelativeLayout implements
 				if(view instanceof ImageView && data instanceof Drawable){
 					ImageView iv = (ImageView)view;
 					iv.setImageDrawable((Drawable)data);
+					iv.setFocusable(false);
 					return true;
 				}else{
 					return false;
 				}
 			}
 		});
+		appPanel.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
 		appPanel.setOnItemClickListener(new AdapterView.OnItemClickListener(){
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-				//	标记该App是由GestureLauncher打开的
-				MyApplication.setStartFromGestureLauncher();
-				//	关闭appPanel
-				FloatWindowManager.getInstance(context).removeBigWindow();
-				//	打开点击的APP
-				String packageName = ((TextView) v.findViewById(R.id.app_package_name))
-							.getText().toString();
-				String activityName = ((TextView) v.findViewById(R.id.activity_name))
-							.getText().toString();
-				ComponentName name=new ComponentName(packageName,activityName);
-				Intent i=new Intent(Intent.ACTION_MAIN);
-				i.addCategory(Intent.CATEGORY_LAUNCHER);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-						Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-				i.setComponent(name);
-				context.startActivity(i);
+			//	标记该App是由GestureLauncher打开的
+			MyApplication.setStartFromGestureLauncher();
+			//	关闭appPanel
+			FloatWindowManager.getInstance(context).removeBigWindow();
+			//	打开点击的APP
+			String packageName = ((TextView) v.findViewById(R.id.app_package_name))
+						.getText().toString();
+			String activityName = ((TextView) v.findViewById(R.id.activity_name))
+						.getText().toString();
+			ComponentName name=new ComponentName(packageName,activityName);
+			Intent i=new Intent(Intent.ACTION_MAIN);
+			i.addCategory(Intent.CATEGORY_LAUNCHER);
+			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+					Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+			i.setComponent(name);
+			context.startActivity(i);
 			}
 		});
 	}
 
 	@Override
 	public void onGesturingStarted(GestureOverlayView overlay) {
-		Log.d(TAG, "onGesturingStarted: 手势开始时间 "+Utils.getTime());
+//		Log.d(TAG, "onGesturingStarted: 手势开始时间 "+Utils.getTime());
+		openApp.setVisibility(GONE);
 		// TODO: 2017/3/5  在日志中记录手势开始时间
 		startTime = Utils.getTime();
 
@@ -173,9 +203,19 @@ public class FloatWindowBigView extends RelativeLayout implements
 
 	@Override
 	public void onGesturingEnded(GestureOverlayView overlay) {
-		Log.d(TAG, "onGesturingEnded: ");
+//		Log.d(TAG, "onGesturingEnded: ");
 	}
 
-
-
+	private void blur(Bitmap bkg, View view) {
+		RenderScript rs = RenderScript.create(context);
+		Allocation overlayAlloc = Allocation.createFromBitmap(rs, bkg);
+		ScriptIntrinsicBlur blur =
+				ScriptIntrinsicBlur.create(rs, overlayAlloc.getElement());
+		blur.setInput(overlayAlloc);
+		blur.setRadius(radius);
+		blur.forEach(overlayAlloc);
+		overlayAlloc.copyTo(bkg);
+		view.setBackground(new BitmapDrawable(getResources(), bkg));
+		rs.destroy();
+	}
 }
