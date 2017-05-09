@@ -13,14 +13,14 @@
 
     <application
         android:allowBackup="true"
-        android:name=".MyApplication"
+        android:name=".main.MyApplication"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
         <activity
-            android:name="cn.edu.pku.chengyao.gesturelauncher.MainActivity"
+            android:name="cn.edu.pku.chengyao.gesturelauncher.main.MainActivity"
             android:excludeFromRecents="true"
             android:label="@string/app_name" >
             <intent-filter>
@@ -29,12 +29,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AllAppsActivity"/>
+        <activity android:name=".main.AllAppsActivity"/>
         <!--<service android:name=".AppMonitorService"/>-->
-        <service android:name=".FloatWindowService" >
-        </service>
+        <!--<service android:name=".FloatWindowService" >-->
+        <!--</service>-->
         <service
-            android:name=".DetectionService"
+            android:name=".permission.DetectionService"
             android:enabled="true"
             android:exported="true"
             android:permission="android.permission.BIND_ACCESSIBILITY_SERVICE">

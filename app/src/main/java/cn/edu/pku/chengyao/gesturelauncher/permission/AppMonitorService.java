@@ -1,4 +1,4 @@
-package cn.edu.pku.chengyao.gesturelauncher;
+package cn.edu.pku.chengyao.gesturelauncher.permission;
 
 import android.app.ActivityManager;
 import android.app.Service;

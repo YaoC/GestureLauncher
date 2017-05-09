@@ -1,4 +1,4 @@
-package cn.edu.pku.chengyao.gesturelauncher;
+package cn.edu.pku.chengyao.gesturelauncher.permission;
 
 import android.content.Context;
 import android.view.WindowManager;
@@ -9,7 +9,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Locale;
+
+import cn.edu.pku.chengyao.gesturelauncher.main.MyApplication;
 
 /**
  * @author chengyao

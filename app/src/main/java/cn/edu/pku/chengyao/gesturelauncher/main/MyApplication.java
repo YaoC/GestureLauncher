@@ -1,4 +1,4 @@
-package cn.edu.pku.chengyao.gesturelauncher;
+package cn.edu.pku.chengyao.gesturelauncher.main;
 
 import android.app.Application;
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.gesture.Gesture;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.wifi.WifiManager;
-import android.provider.MediaStore;
 import android.util.Log;
 
 import com.avos.avoscloud.AVOSCloud;
@@ -16,10 +15,7 @@ import com.avos.avoscloud.AVOSCloud;
 import org.tensorflow.contrib.android.TensorFlowInferenceInterface;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayOutputStream;
 import java.io.InputStreamReader;
-import java.nio.ByteBuffer;
-import java.nio.FloatBuffer;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;

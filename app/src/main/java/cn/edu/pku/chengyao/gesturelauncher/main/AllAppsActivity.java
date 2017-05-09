@@ -1,4 +1,4 @@
-package cn.edu.pku.chengyao.gesturelauncher;
+package cn.edu.pku.chengyao.gesturelauncher.main;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -16,6 +16,8 @@ import android.widget.TextView;
 
 import java.util.List;
 import java.util.Map;
+
+import cn.edu.pku.chengyao.gesturelauncher.R;
 
 /**
  * @author chengyao

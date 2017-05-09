@@ -1,39 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 Facishare Technology Co., Ltd. All Rights Reserved.
+  -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
 
     <Button
+        android:id="@+id/btn_show_or_apply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="show"
-        android:text="显示悬浮窗" />
-
+        android:text="btn_show_or_apply"/>
 
     <Button
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:onClick="remove"
-    android:text="移除悬浮窗" />
-
-    <Button
+        android:id="@+id/btn_dismiss"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:onClick="testLeanCloud"
-        android:text="LeanCloud日志测试" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="appendLogToFile"
-        android:text="日志写入文件" />
-
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:onClick="activityTopTest"
-        android:text="栈顶测试" />
-
+        android:text="btn_dismiss"/>
 
 </LinearLayout>

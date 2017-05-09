@@ -1,7 +1,9 @@
-package cn.edu.pku.chengyao.gesturelauncher;
+package cn.edu.pku.chengyao.gesturelauncher.permission;
 
 import android.accessibilityservice.AccessibilityService;
 import android.view.accessibility.AccessibilityEvent;
+
+import cn.edu.pku.chengyao.gesturelauncher.main.MyApplication;
 
 /**
  * @author chengyao

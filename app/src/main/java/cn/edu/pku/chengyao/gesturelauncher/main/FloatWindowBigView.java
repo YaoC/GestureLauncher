@@ -1,4 +1,4 @@
-package cn.edu.pku.chengyao.gesturelauncher;
+package cn.edu.pku.chengyao.gesturelauncher.main;
 
 import android.content.ComponentName;
 import android.content.Context;
@@ -24,7 +24,9 @@ import android.widget.TextView;
 import java.util.List;
 import java.util.Map;
 
-import static android.R.attr.radius;
+import cn.edu.pku.chengyao.gesturelauncher.R;
+import cn.edu.pku.chengyao.gesturelauncher.permission.Utils;
+
 
 /**
  * project: GestureLauncher
@@ -53,7 +55,7 @@ public class FloatWindowBigView extends RelativeLayout implements
 	private GestureOverlayView gesturePanel;
 
 	//	APP面板
-	private LinearLayout flowBig;
+	private RelativeLayout flowBig;
 	private LinearLayout appRecommendation;
 	private GridView appPanel;
 	private Button openApp;
@@ -104,17 +106,17 @@ public class FloatWindowBigView extends RelativeLayout implements
 
 			@Override
 			public void onClick(View v) {
-				FloatWindowManager.getInstance(context).removeBigWindow();
+				FloatWindowManager.getInstance().removeBigWindow();
 			}
 		});
 
-		flowBig = (LinearLayout) findViewById(R.id.flow_big);
+		flowBig = (RelativeLayout) findViewById(R.id.flow_big);
 		openApp = (Button) findViewById(R.id.open_app);
 		openApp.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FloatWindowManager.getInstance(context).removeBigWindow();
-				ComponentName name = new ComponentName(context.getPackageName(), context.getPackageName() + ".MainActivity");
+				FloatWindowManager.getInstance().removeBigWindow();
+				ComponentName name = new ComponentName(context.getPackageName(), context.getPackageName() + ".MainMasterActivity");
 				Intent i=new Intent(Intent.ACTION_MAIN);
 				i.addCategory(Intent.CATEGORY_LAUNCHER);
 				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
@@ -127,7 +129,7 @@ public class FloatWindowBigView extends RelativeLayout implements
 		otherApp.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				FloatWindowManager.getInstance(context).removeBigWindow();
+				FloatWindowManager.getInstance().removeBigWindow();
 				Intent i=new Intent(context ,AllAppsActivity.class);
 				context.startActivity(i);
 			}
@@ -181,7 +183,7 @@ public class FloatWindowBigView extends RelativeLayout implements
 			//	标记该App是由GestureLauncher打开的
 			MyApplication.setStartFromGestureLauncher();
 			//	关闭appPanel
-			FloatWindowManager.getInstance(context).removeBigWindow();
+				FloatWindowManager.getInstance().removeBigWindow();
 			//	打开点击的APP
 			String packageName = ((TextView) v.findViewById(R.id.app_package_name))
 						.getText().toString();
@@ -205,7 +207,7 @@ public class FloatWindowBigView extends RelativeLayout implements
 	@Override
 	public void onGesturingStarted(GestureOverlayView overlay) {
 //		Log.d(TAG, "onGesturingStarted: 手势开始时间 "+Utils.getTime());
-		openApp.setVisibility(GONE);
+		openApp.setVisibility(INVISIBLE);
 		// TODO: 2017/3/5  在日志中记录手势开始时间
 		startTime = Utils.getTime();
 
