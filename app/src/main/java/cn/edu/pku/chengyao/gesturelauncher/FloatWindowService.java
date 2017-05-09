@@ -39,10 +39,11 @@ public class FloatWindowService extends Service {
 		if (timer == null) {
 			timer = new Timer();
 			// 每500毫秒就执行一次刷新任务
-			timer.scheduleAtFixedRate(new RefreshTask(), 0, 500);
+			timer.scheduleAtFixedRate(new RefreshTask(), 0, 5000);
+//			Log.i(TAG, "onStartCommand: new Task");
 		}
 
-		return START_STICKY;
+		return START_REDELIVER_INTENT;
 	}
 
 	@Override

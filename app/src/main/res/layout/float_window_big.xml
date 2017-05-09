@@ -6,22 +6,34 @@
     android:background="@android:color/transparent"
     android:padding="40dp">
 
-
-    <!--三列、网格水平垂直间距10dp-->
-    <GridView
-        android:id="@+id/app_panel"
+    <LinearLayout
+        android:id="@+id/app_recommendation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:numColumns="3"
-        android:layout_marginTop="20dp"
-        android:paddingTop="20dp"
-        android:paddingBottom="20dp"
-        android:horizontalSpacing="10dp"
-        android:verticalSpacing="10dp"
-        android:gravity="center"
-        android:background="#969696">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <!--三列、网格水平垂直间距10dp-->
+        <GridView
+            android:id="@+id/app_panel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="3"
+            android:layout_marginTop="20dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:horizontalSpacing="10dp"
+            android:verticalSpacing="10dp"
+            android:gravity="center"
+            android:background="#969696">
+        </GridView>
+        <Button
+            android:id="@+id/all_app"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="其它"/>
+    </LinearLayout>
 
-    </GridView>
+
+
 
     <LinearLayout
         android:id="@+id/flow_big"

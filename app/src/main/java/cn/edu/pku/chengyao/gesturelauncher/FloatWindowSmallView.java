@@ -5,6 +5,7 @@ import java.lang.reflect.Field;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -22,6 +23,7 @@ import android.widget.TextView;
  *
  **/
 public class FloatWindowSmallView extends LinearLayout {
+	private static final String TAG = "FloatWindowSmallView";
 
 	// 小悬浮窗的宽
 	public int viewWidth;
@@ -90,12 +92,16 @@ public class FloatWindowSmallView extends LinearLayout {
 
 	}
 
+
+
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		Log.i("悬浮窗", "onTouchEvent: "+event.toString());
 		switch (event.getAction()) {
 		// 手指按下时记录必要的数据,纵坐标的值都减去状态栏的高度
 		case MotionEvent.ACTION_DOWN:
+			Log.i(TAG, "onTouchEvent: ACTION_DOWN");
 			// 获取相对与小悬浮窗的坐标
 			xInView = event.getX();
 			yInView = event.getY();
@@ -104,18 +110,22 @@ public class FloatWindowSmallView extends LinearLayout {
 			yDownInScreen = event.getRawY() - statusBarHeight;
 			break;
 		case MotionEvent.ACTION_MOVE:
+			Log.i(TAG, "onTouchEvent: ACTION_MOVE");
 			// 时时的更新当前手指在屏幕上的位置
 			xInScreen = event.getRawX();
 			yInScreen = event.getRawY() - statusBarHeight;
 			// 手指移动的时候更新小悬浮窗的位置
 			updateViewPosition();
 			break;
+		case MotionEvent.ACTION_CANCEL:
 		case MotionEvent.ACTION_UP:
+			Log.i(TAG, "onTouchEvent: ACTION_UP");
 			// 如果手指离开屏幕时，按下坐标与当前坐标相等，则视为触发了单击事件
 			if (xDownInScreen == event.getRawX()
 					&& yDownInScreen == (event.getRawY() - getStatusBarHeight())) {
 
 				if (listener != null) {
+					Log.i("单击事件", "onTouchEvent: ");
 					listener.click();
 				}
 

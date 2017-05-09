@@ -19,9 +19,17 @@ android {
     }
 
     //为了解决部分第三方库重复打包了META-INF的问题
-    packagingOptions{
+    packagingOptions {
         exclude 'META-INF/LICENSE.txt'
         exclude 'META-INF/NOTICE.txt'
+    }
+
+    // TensorFlow 库
+    sourceSets {
+        main {
+            jniLibs.srcDirs = ['libs']
+            assets.srcDirs = ['src/main/assets', 'src/main/res/assets/']
+        }
     }
 }
 
@@ -36,5 +44,5 @@ dependencies {
 //    add by YaoC
     compile 'eu.chainfire:libsuperuser:1.0.0.+'
 
-    compile ('cn.leancloud.android:avoscloud-sdk:v3.+')
+    compile('cn.leancloud.android:avoscloud-sdk:v3.+')
 }

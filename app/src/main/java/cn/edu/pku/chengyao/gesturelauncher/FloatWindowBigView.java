@@ -5,14 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.gesture.Gesture;
 import android.gesture.GestureOverlayView;
-import android.graphics.Bitmap;
 import android.graphics.PixelFormat;
-import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.renderscript.Allocation;
-import android.renderscript.RenderScript;
-import android.renderscript.ScriptIntrinsicBlur;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -60,8 +54,10 @@ public class FloatWindowBigView extends RelativeLayout implements
 
 	//	APP面板
 	private LinearLayout flowBig;
+	private LinearLayout appRecommendation;
 	private GridView appPanel;
 	private Button openApp;
+	private Button otherApp;
 
 	private String startTime;
 
@@ -77,8 +73,9 @@ public class FloatWindowBigView extends RelativeLayout implements
 
 
 		//	隐藏 app_panel
+		appRecommendation = (LinearLayout) findViewById(R.id.app_recommendation);
 		appPanel = (GridView) findViewById(R.id.app_panel);
-		appPanel.setVisibility(INVISIBLE);
+		appRecommendation.setVisibility(INVISIBLE);
 
 //		Log.d(TAG, "FloatWindowBigView: viewWidth=" + viewWidth + "  viewHeight=" + viewHeight);
 
@@ -126,6 +123,15 @@ public class FloatWindowBigView extends RelativeLayout implements
 				context.startActivity(i);
 			}
 		});
+		otherApp = (Button) findViewById(R.id.all_app);
+		otherApp.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				FloatWindowManager.getInstance(context).removeBigWindow();
+				Intent i=new Intent(context ,AllAppsActivity.class);
+				context.startActivity(i);
+			}
+		});
 		//	手势
 		gesturePanel = (GestureOverlayView) findViewById(R.id.gesture_panel);
 		//	设置手势可以多笔完成
@@ -140,9 +146,9 @@ public class FloatWindowBigView extends RelativeLayout implements
 
 	//手势响应
 	@Override
-	public void onGesturePerformed(GestureOverlayView overlay, Gesture gesture) {
+	public void onGesturePerformed(GestureOverlayView overlay, final Gesture gesture) {
 		flowBig.setVisibility(INVISIBLE);
-		appPanel.setVisibility(VISIBLE);
+		appRecommendation.setVisibility(VISIBLE);
 		// TODO: 2017/3/5 识别手势，返回APP数组
 		List<Map<String, Object>> appList = MyApplication.getLaunchables(gesture);
 //		Log.d(TAG, "onGesturePerformed: 手势结束时间 " + Utils.getTime());
@@ -181,6 +187,10 @@ public class FloatWindowBigView extends RelativeLayout implements
 						.getText().toString();
 			String activityName = ((TextView) v.findViewById(R.id.activity_name))
 						.getText().toString();
+
+			//	建立手势与App的映射
+
+
 			ComponentName name=new ComponentName(packageName,activityName);
 			Intent i=new Intent(Intent.ACTION_MAIN);
 			i.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -206,16 +216,4 @@ public class FloatWindowBigView extends RelativeLayout implements
 //		Log.d(TAG, "onGesturingEnded: ");
 	}
 
-	private void blur(Bitmap bkg, View view) {
-		RenderScript rs = RenderScript.create(context);
-		Allocation overlayAlloc = Allocation.createFromBitmap(rs, bkg);
-		ScriptIntrinsicBlur blur =
-				ScriptIntrinsicBlur.create(rs, overlayAlloc.getElement());
-		blur.setInput(overlayAlloc);
-		blur.setRadius(radius);
-		blur.forEach(overlayAlloc);
-		overlayAlloc.copyTo(bkg);
-		view.setBackground(new BitmapDrawable(getResources(), bkg));
-		rs.destroy();
-	}
 }
