@@ -4,10 +4,8 @@ import android.app.Application;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
-import android.gesture.Gesture;
-import android.graphics.Bitmap;
-import android.graphics.Color;
 import android.net.wifi.WifiManager;
+import android.provider.Settings;
 import android.util.Log;
 
 import com.avos.avoscloud.AVOSCloud;
@@ -48,10 +46,10 @@ public class MyApplication extends Application{
 
     private static short startFromGestureLauncher = 0;
 
-    // TF
-    static {
-        System.loadLibrary("tensorflow_inference");
-    }
+//    // TF
+//    static {
+//        System.loadLibrary("tensorflow_inference");
+//    }
 
     private static TensorFlowInferenceInterface inferenceInterface;
 
@@ -75,7 +73,7 @@ public class MyApplication extends Application{
         //  放在 SDK 初始化语句 AVOSCloud.initialize() 后面，只需要调用一次即可
         AVOSCloud.setDebugLogEnabled(true);
         mApplication = this;
-        initMacAddress();
+        initID();
         initAppInfos2();
         initTensorFlow();
     }
@@ -105,17 +103,8 @@ public class MyApplication extends Application{
     }
 
     //  根据输入的手势返回4个APP，现在只是随机返回四个
-    public static List<Map<String,Object>> getLaunchables(Gesture gesture){
-        // TODO: 2017/3/7 手势识别匹配
-        Bitmap b = gesture.toBitmap(100, 100, 25, Color.WHITE);
-        int[] data = new int[100*100];
-        b.getPixels(data,0, 100, 0, 0, 100, 100);
-        float[] img = new float[100 * 100];
-        for (int i=0;i<10000;i++) {
-            if (data[i] != 0) {
-                img[i] = 1.0f;
-            }
-        }
+    public static List<Map<String, Object>> getLaunchables(float[] img) {
+
         Log.i(TAG, "getLaunchables: "+getResults(img));
 //        MediaStore.Images.Media.insertImage(mApplication.getContentResolver(), b, "title", "description");
         int idx=(int)(Math.random()*(launchables.size()-9));
@@ -147,16 +136,16 @@ public class MyApplication extends Application{
         return apps;
     }
     //  获取mac地址
-    private void initMacAddress() {
+    private void initID() {
         wm = (WifiManager) getSystemService(this.WIFI_SERVICE);
         if (wm.getConnectionInfo().getMacAddress() == null) {
             m_szWLANMAC = "000000000000";
         } else {
-            m_szWLANMAC = wm.getConnectionInfo().getMacAddress().replace(":", "");
+            m_szWLANMAC = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         }
     }
 
-    public static String getMacAddress(){
+    public static String getID() {
         return m_szWLANMAC;
     }
 
@@ -252,6 +241,5 @@ public class MyApplication extends Application{
         }
         return img;
     }
-
 
 }

@@ -116,12 +116,12 @@ public class FloatWindowBigView extends RelativeLayout implements
 			@Override
 			public void onClick(View v) {
 				FloatWindowManager.getInstance().removeBigWindow();
-				ComponentName name = new ComponentName(context.getPackageName(), context.getPackageName() + ".MainMasterActivity");
-				Intent i=new Intent(Intent.ACTION_MAIN);
-				i.addCategory(Intent.CATEGORY_LAUNCHER);
-				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-						Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-				i.setComponent(name);
+//				ComponentName name = new ComponentName("cn.edu.pku.chengyao.gesturelauncher","cn.edu.pku.chengyao.gesturelauncher.main.MainActivity");
+				Intent i = new Intent(context, MainActivity.class);
+//				i.addCategory(Intent.CATEGORY_LAUNCHER);
+//				i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+//						Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+//				i.setComponent(name);
 				context.startActivity(i);
 			}
 		});
@@ -151,12 +151,11 @@ public class FloatWindowBigView extends RelativeLayout implements
 	public void onGesturePerformed(GestureOverlayView overlay, final Gesture gesture) {
 		flowBig.setVisibility(INVISIBLE);
 		appRecommendation.setVisibility(VISIBLE);
-		// TODO: 2017/3/5 识别手势，返回APP数组
-		List<Map<String, Object>> appList = MyApplication.getLaunchables(gesture);
+		final float[] img = Utils.convertGestureToArray(gesture);
+		List<Map<String, Object>> appList = MyApplication.getLaunchables(img);
 //		Log.d(TAG, "onGesturePerformed: 手势结束时间 " + Utils.getTime());
-		// TODO: 2017/3/5  记录绘制完成时间,写入日志
 		String endTime = Utils.getTime();
-		Utils.appendLog(context, "gesture", MyApplication.getMacAddress() + "," + startTime + "," + endTime);
+		Utils.appendLog(context, "gesture", MyApplication.getID() + "," + startTime + "," + endTime);
 		SimpleAdapter simpleAdapter = new SimpleAdapter(
 				context, appList, R.layout.app_item,
 				new String[]{"appName", "activityName", "packageName", "icon"},
@@ -189,9 +188,7 @@ public class FloatWindowBigView extends RelativeLayout implements
 						.getText().toString();
 			String activityName = ((TextView) v.findViewById(R.id.activity_name))
 						.getText().toString();
-
-			//	建立手势与App的映射
-
+				Utils.appendGestureLog(context, img, packageName, position);
 
 			ComponentName name=new ComponentName(packageName,activityName);
 			Intent i=new Intent(Intent.ACTION_MAIN);

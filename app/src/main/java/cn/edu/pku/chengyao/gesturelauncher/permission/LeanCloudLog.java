@@ -31,9 +31,9 @@ public class LeanCloudLog {
             @Override
             public void done(AVException e) {
                 if (e == null) {
-                    Log.d(TAG, "done: upload success");
+                    Log.i(TAG, "done: upload success");
                 } else {
-                    Log.d(TAG, "done: upload error");
+                    Log.i(TAG, "done: upload error");
                 }
             }
         });
@@ -49,11 +49,11 @@ public class LeanCloudLog {
                 file.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(AVException e) {
-                        Log.d(TAG, "上传成功！");
+                        Log.i(TAG, "上传成功！");
                         if (f.delete()) {
-                            Log.d(TAG, "done: 日志删除成功！");
+                            Log.i(TAG, "done: 日志删除成功！");
                         }else{
-                            Log.d(TAG, "done: 日志删除失败！");
+                            Log.i(TAG, "done: 日志删除失败！");
                         }
                     }
                 });

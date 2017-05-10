@@ -19,7 +19,7 @@ public class DetectionService extends AccessibilityService {
             String currentForegroundPackageName = event.getPackageName().toString();
             if (!currentForegroundPackageName.equals(lastForegroundPackageName)
                     && MyApplication.getlaunchableAppNames().contains(currentForegroundPackageName)) {
-                Utils.appendLog(this, "usage", MyApplication.getMacAddress() + "," + Utils.getTime()
+                Utils.appendLog(this, "usage", MyApplication.getID() + "," + Utils.getTime()
                         + "," + currentForegroundPackageName + "," + MyApplication.getStartFromGestureLauncherFlag());
                 lastForegroundPackageName = currentForegroundPackageName;
             }

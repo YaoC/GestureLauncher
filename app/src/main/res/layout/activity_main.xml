@@ -11,12 +11,18 @@
         android:id="@+id/btn_show_or_apply"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="btn_show_or_apply"/>
+        android:text="开启悬浮窗"/>
 
     <Button
         android:id="@+id/btn_dismiss"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="btn_dismiss"/>
+        android:text="关闭悬浮窗"/>
+
+    <Button
+        android:id="@+id/btn_log_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="上传日志测试"/>
 
 </LinearLayout>
