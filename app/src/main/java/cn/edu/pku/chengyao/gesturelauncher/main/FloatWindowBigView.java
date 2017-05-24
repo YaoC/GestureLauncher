@@ -138,7 +138,11 @@ public class FloatWindowBigView extends RelativeLayout implements
 		gesturePanel = (GestureOverlayView) findViewById(R.id.gesture_panel);
 		//	设置手势可以多笔完成
 		gesturePanel.setGestureStrokeType(GestureOverlayView.GESTURE_STROKE_TYPE_MULTIPLE);
-
+//		Log.i(TAG, "initView: "+gesturePanel.getGestureStrokeAngleThreshold());
+//		Log.i(TAG, "initView: "+gesturePanel.getGestureStrokeSquarenessTreshold());
+//		倾斜程度大于gestureStrokeSquarenessThreshold的手势才会被认为是有效的手势，
+// 		默认是0.275，这样竖直划下的手势就不能被识别，设置为0后则可以被识别
+		gesturePanel.setGestureStrokeSquarenessTreshold(0);
 		//	绑定监听器
 		gesturePanel.addOnGesturingListener(this);
 		gesturePanel.addOnGesturePerformedListener(this);

@@ -56,6 +56,7 @@ public class MyApplication extends Application{
     private static String[] labels = {"Adobe Air", "Chrome", "Facebook", "QQ", "WPS Office",
             "京东", "优酷", "健康", "去哪儿旅行", "天猫", "微信", "微博", "手机淘宝", "支付宝", "滴滴出行",
             "照片", "百度地图", "相机", "邮件", "金山词霸"};
+    private static String[] alphabetOfLabels = {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
     private static final String MODEL_FILE = "file:///android_asset/frozen_gesture_scores.pb";
     private static final String INPUT_NODE = "x_input";
     private static final String OUTPUT_NODE = "output/scores";
