@@ -23,6 +23,17 @@
         android:id="@+id/btn_log_upload"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="上传日志测试"/>
+        android:text="手动上传日志"/>
+
+    <Button
+        android:id="@+id/btn_show_logs"
+        android:text="查看缓存的日志"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:text="要存储用户开启App的行为日志请在 设置->系统设置（高级设置）->辅助功能 里开启 GestureLauncher 的权限"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

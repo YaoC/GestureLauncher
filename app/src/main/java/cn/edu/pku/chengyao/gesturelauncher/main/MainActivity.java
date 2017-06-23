@@ -2,6 +2,7 @@ package cn.edu.pku.chengyao.gesturelauncher.main;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.view.View;
@@ -38,23 +39,28 @@ public class MainActivity extends Activity {
         findViewById(R.id.btn_log_upload).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String key = "lastLogUploadDate";
-//                final long oneDay = 86400000;
-//		测试用
-                final long oneDay = 6;
-                SharedPreferences sharedPreferences = getSharedPreferences(TAG, MODE_PRIVATE);
-                long lastLogUploadDate = sharedPreferences.getLong(key, 0);
-                if (lastLogUploadDate != 0) {
-                    long currentTime = System.currentTimeMillis();
-                    if (currentTime - lastLogUploadDate >= oneDay) {
-                        LeanCloudLog.uploadAppLogFile(context);
-                    }
-                }
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-                editor.putLong(key, System.currentTimeMillis());
-                editor.apply();
+                LeanCloudLog.uploadAppLogFile(context);
             }
         });
+
+        findViewById(R.id.btn_show_logs).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent i = new Intent();
+                i.setClass(context, LogActivity.class);
+                startActivity(i);
+            }
+        });
+
+        // 自动检查时间，如果时间大于1天则自动上传日志
+        final String key = "lastLogUploadDate";
+        final long oneDay = 86400000;
+        SharedPreferences sharedPreferences = getSharedPreferences(TAG, MODE_PRIVATE);
+        long lastLogUploadDate = sharedPreferences.getLong(key, 0);
+        long currentTime = System.currentTimeMillis();
+        if (currentTime - lastLogUploadDate >= oneDay) {
+            LeanCloudLog.uploadAppLogFile(context);
+        }
     }
 
 }

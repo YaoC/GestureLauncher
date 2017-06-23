@@ -1,7 +1,9 @@
 package cn.edu.pku.chengyao.gesturelauncher.permission;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVFile;
@@ -11,6 +13,8 @@ import com.avos.avoscloud.SaveCallback;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FilenameFilter;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author chengyao
@@ -40,7 +44,7 @@ public class LeanCloudLog {
 
     }
 
-    public static void uploadAppLogFile(Context context) {
+    public static void uploadAppLogFile(final Context context) {
         File logFileDir = context.getCacheDir();
         for (final File f : logFileDir.listFiles(new logFilter())) {
             try {
@@ -49,12 +53,16 @@ public class LeanCloudLog {
                 file.saveInBackground(new SaveCallback() {
                     @Override
                     public void done(AVException e) {
-                        Log.i(TAG, "上传成功！");
+                        Toast.makeText(context, "日志上传成功", Toast.LENGTH_LONG).show();
                         if (f.delete()) {
                             Log.i(TAG, "done: 日志删除成功！");
                         }else{
                             Log.i(TAG, "done: 日志删除失败！");
                         }
+                        SharedPreferences sharedPreferences = context.getSharedPreferences("MainActivity", context.MODE_PRIVATE);
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putLong("lastLogUploadDate", System.currentTimeMillis());
+                        editor.apply();
                     }
                 });
             } catch (FileNotFoundException e) {
@@ -62,6 +70,18 @@ public class LeanCloudLog {
             }
 //            Log.d(TAG, "uploadAppLogFile: "+f.getPath());
         }
+    }
+
+    /*
+     * 返回当前缓存的所有日志
+     */
+    public static List<String> getLogFilesName(Context context) {
+        List<String> files = new ArrayList<>();
+        File logFileDir = context.getCacheDir();
+        for (File f : logFileDir.listFiles(new logFilter())) {
+            files.add(f.getName());
+        }
+        return files;
     }
 
     private static class logFilter implements FilenameFilter {

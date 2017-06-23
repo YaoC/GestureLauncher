@@ -1,12 +1,12 @@
 package cn.edu.pku.chengyao.gesturelauncher.main;
 
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.gesture.Gesture;
 import android.gesture.GestureOverlayView;
 import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -134,6 +134,7 @@ public class FloatWindowBigView extends RelativeLayout implements
 				context.startActivity(i);
 			}
 		});
+		Log.w(TAG, "initView: open Gesture Panel time:" + Utils.getTime());
 		//	手势
 		gesturePanel = (GestureOverlayView) findViewById(R.id.gesture_panel);
 		//	设置手势可以多笔完成
@@ -190,17 +191,20 @@ public class FloatWindowBigView extends RelativeLayout implements
 			//	打开点击的APP
 			String packageName = ((TextView) v.findViewById(R.id.app_package_name))
 						.getText().toString();
-			String activityName = ((TextView) v.findViewById(R.id.activity_name))
-						.getText().toString();
+//			String activityName = ((TextView) v.findViewById(R.id.activity_name))
+//						.getText().toString();
 				Utils.appendGestureLog(context, img, packageName, position);
 
-			ComponentName name=new ComponentName(packageName,activityName);
-			Intent i=new Intent(Intent.ACTION_MAIN);
-			i.addCategory(Intent.CATEGORY_LAUNCHER);
-			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
-					Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
-			i.setComponent(name);
-			context.startActivity(i);
+//			ComponentName name=new ComponentName(packageName,activityName);
+//			Intent i=new Intent(Intent.ACTION_MAIN);
+//			i.addCategory(Intent.CATEGORY_LAUNCHER);
+//			i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK |
+//					Intent.FLAG_ACTIVITY_RESET_TASK_IF_NEEDED);
+//			i.setComponent(name);
+//			context.startActivity(i);
+//			Log.i(TAG, "onItemClick: launch "+name+" time: "+ Utils.getTime());
+				Intent i = context.getPackageManager().getLaunchIntentForPackage(packageName);
+				context.startActivity(i);
 			}
 		});
 	}
@@ -209,14 +213,13 @@ public class FloatWindowBigView extends RelativeLayout implements
 	public void onGesturingStarted(GestureOverlayView overlay) {
 //		Log.d(TAG, "onGesturingStarted: 手势开始时间 "+Utils.getTime());
 		openApp.setVisibility(INVISIBLE);
-		// TODO: 2017/3/5  在日志中记录手势开始时间
 		startTime = Utils.getTime();
 
 	}
 
 	@Override
 	public void onGesturingEnded(GestureOverlayView overlay) {
-//		Log.d(TAG, "onGesturingEnded: ");
+		Log.w(TAG, "onGesturingEnded time, Gesture end time :" + Utils.getTime());
 	}
 
 }

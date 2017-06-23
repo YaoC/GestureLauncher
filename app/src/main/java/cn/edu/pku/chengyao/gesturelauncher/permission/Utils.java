@@ -11,13 +11,17 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.FileWriter;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import cn.edu.pku.chengyao.gesturelauncher.main.MyApplication;
+import cn.edu.pku.yaochg.imagesimilarity.DssimInterface;
 
 /**
  * @author chengyao
@@ -52,7 +56,7 @@ public class Utils {
 
 	//	获取当前时间
 	public static String getTime(){
-		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SSS");
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss:SS");
 		Date curDate = new Date(System.currentTimeMillis());//获取当前时间
 		return formatter.format(curDate);
 	}
@@ -63,6 +67,16 @@ public class Utils {
 		return formatter.format(curDate);
 	}
 
+	/*
+	 * 将时间戳转换为时间
+     */
+	public static String stampToTime(long s) {
+		String res;
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date date = new Date(s);
+		res = simpleDateFormat.format(date);
+		return res;
+	}
 
 	public static void appendLog(Context context, String type, String text) {
 
@@ -151,4 +165,63 @@ public class Utils {
 		}
 	}
 
+	// 存储图片到指定位置
+	public static boolean saveIconToFile(File dir, String fileName, Bitmap bm,
+										 Bitmap.CompressFormat format, int quality) {
+
+		File imageFile = new File(dir, fileName);
+
+		FileOutputStream fos = null;
+		try {
+			fos = new FileOutputStream(imageFile);
+
+			bm.compress(format, quality, fos);
+
+			fos.close();
+
+			return true;
+		} catch (IOException e) {
+			Log.e("app", e.getMessage());
+			if (fos != null) {
+				try {
+					fos.close();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
+			}
+		}
+		return false;
+	}
+
+	public static Map<String, Map<String, Double>> iconsSimilarity(Context context) {
+
+
+		File iconDir = new File(context.getCacheDir().getAbsolutePath() + "/icons");
+		File[] icons = iconDir.listFiles(new pngFilter());
+
+		File externalFileDir = context.getExternalFilesDir(null);
+		File[] icons20 = externalFileDir.listFiles(new pngFilter());
+
+		Map<String, Map<String, Double>> similarity = new HashMap<>();
+
+		for (File icon : icons) {
+			Map<String, Double> tempSim = new HashMap<>();
+			for (File icon20 : icons20) {
+				double sim = new DssimInterface().similarity(icon.getAbsolutePath(), icon20.getAbsolutePath());
+				if (!(sim >= 0)) {
+					sim = 100;
+				}
+				tempSim.put(icon20.getName().replace(".png", ""), sim);
+			}
+
+			similarity.put(icon.getName().replace(".png", ""), tempSim);
+		}
+		return similarity;
+	}
+
+	private static class pngFilter implements FilenameFilter {
+		public boolean accept(File dir, String name) {
+			return name.endsWith(".png");
+		}
+	}
 }
