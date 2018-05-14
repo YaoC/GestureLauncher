@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import cn.edu.pku.chengyao.gesturelauncher.permission.Utils;
+import cn.edu.pku.chengyao.gesturelauncher.tools.Utils;
 import cn.edu.pku.yaochg.imagesimilarity.AssetCopyer;
 import cn.edu.pku.yaochg.imagesimilarity.PingYinUtil;
 
@@ -96,7 +96,7 @@ public class MyApplication extends Application{
         AVOSCloud.setDebugLogEnabled(true);
         mApplication = this;
         initID();
-        initAppInfos2();
+        initAppInfos();
         initTensorFlow();
         initIcons();
         initAppSimilarity();
@@ -111,7 +111,7 @@ public class MyApplication extends Application{
     }
 
     //获取所有可以启动的activity
-    private void initAppInfos2() {
+    private void initAppInfos() {
         pm = mApplication.getPackageManager();
         Intent main=new Intent(Intent.ACTION_MAIN, null);
         main.addCategory(Intent.CATEGORY_LAUNCHER);
@@ -133,9 +133,9 @@ public class MyApplication extends Application{
         }
 
 
-//        Log.i(TAG, "initAppInfos2: " + launchableIdx);
-//        Log.d(TAG, "initAppInfos2: "+ launchablePackageNames);
-//        Log.d(TAG, "initAppInfos2: runing apps "+ProcessManager.getRunningApps());
+//        Log.i(TAG, "initAppInfos: " + launchableIdx);
+//        Log.d(TAG, "initAppInfos: "+ launchablePackageNames);
+//        Log.d(TAG, "initAppInfos: runing apps "+ProcessManager.getRunningApps());
     }
 
     public static List<Map<String, Object>> getLaunchables(float[] img) {
@@ -353,6 +353,16 @@ public class MyApplication extends Application{
                 return (int) (o2.getValue() - o1.getValue());
             }
         });
+
+        //test
+        final Map<String, Double> testW = weights;
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                testRatio(testW);
+            }
+        });
+        thread.start();
         return output.subList(0, 9);
     }
 
@@ -400,5 +410,34 @@ public class MyApplication extends Application{
             }
             similarityAlphabet.put(icon, temp);
         }
+    }
+
+    public static void testRatio(final Map<String, Double> weights) {
+        Map<String, Double> scores = new HashMap<>();
+        //计算图标相似度
+        for(int i = 0;i<=100;i+=5) {
+            for (String icon : launchableIdx.keySet()) {
+                double score = 0.0;
+                Map<String, Double> sim = similarity.get(icon);
+                Map<String, Double> simAlphabet = similarityAlphabet.get(icon);
+                for (String label : labels) {
+                    score += weights.get(label) * (i / (1 + sim.get(label)) + (100-i) / (1 + simAlphabet.get(label)));
+                }
+                scores.put(icon, score);
+            }
+            List<Map.Entry<String, Double>> output = new ArrayList<>(scores.entrySet());
+            Collections.sort(output, new Comparator<Map.Entry<String, Double>>() {
+                public int compare(Map.Entry<String, Double> o1,
+                                   Map.Entry<String, Double> o2) {
+                    return (int) (o2.getValue() - o1.getValue());
+                }
+            });
+            List<String> result = new ArrayList<>();
+            for(int j=0;j<9;j++) {
+                result.add(output.get(j).getKey());
+            }
+            Log.i("ratio="+i, result.toString());
+        }
+
     }
 }

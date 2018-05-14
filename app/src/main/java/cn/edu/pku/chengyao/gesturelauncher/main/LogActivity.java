@@ -8,8 +8,8 @@ import android.widget.TextView;
 import java.util.List;
 
 import cn.edu.pku.chengyao.gesturelauncher.R;
-import cn.edu.pku.chengyao.gesturelauncher.permission.LeanCloudLog;
-import cn.edu.pku.chengyao.gesturelauncher.permission.Utils;
+import cn.edu.pku.chengyao.gesturelauncher.tools.LeanCloudLog;
+import cn.edu.pku.chengyao.gesturelauncher.tools.Utils;
 
 public class LogActivity extends Activity {
 

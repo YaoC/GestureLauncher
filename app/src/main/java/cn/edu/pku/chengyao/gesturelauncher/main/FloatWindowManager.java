@@ -17,11 +17,11 @@ import android.view.WindowManager;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
-import cn.edu.pku.chengyao.gesturelauncher.permission.rom.HuaweiUtils;
-import cn.edu.pku.chengyao.gesturelauncher.permission.rom.MeizuUtils;
-import cn.edu.pku.chengyao.gesturelauncher.permission.rom.MiuiUtils;
-import cn.edu.pku.chengyao.gesturelauncher.permission.rom.QikuUtils;
-import cn.edu.pku.chengyao.gesturelauncher.permission.rom.RomUtils;
+import cn.edu.pku.chengyao.gesturelauncher.tools.rom.HuaweiUtils;
+import cn.edu.pku.chengyao.gesturelauncher.tools.rom.MeizuUtils;
+import cn.edu.pku.chengyao.gesturelauncher.tools.rom.MiuiUtils;
+import cn.edu.pku.chengyao.gesturelauncher.tools.rom.QikuUtils;
+import cn.edu.pku.chengyao.gesturelauncher.tools.rom.RomUtils;
 
 public class FloatWindowManager {
     private static final String TAG = "FloatWindowManager";

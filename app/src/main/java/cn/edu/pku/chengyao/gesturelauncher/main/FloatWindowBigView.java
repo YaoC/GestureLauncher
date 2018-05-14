@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import cn.edu.pku.chengyao.gesturelauncher.R;
-import cn.edu.pku.chengyao.gesturelauncher.permission.Utils;
+import cn.edu.pku.chengyao.gesturelauncher.tools.Utils;
 
 
 /**

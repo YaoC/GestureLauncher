@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import cn.edu.pku.chengyao.gesturelauncher.R;
-import cn.edu.pku.chengyao.gesturelauncher.permission.LeanCloudLog;
+import cn.edu.pku.chengyao.gesturelauncher.tools.LeanCloudLog;
 
 
 public class MainActivity extends Activity {
